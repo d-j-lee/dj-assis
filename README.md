@@ -14,17 +14,19 @@ AI는 이미 충분히 유능하다. 이제 세션 품질을 깎는 건 사람 �
 
 자세한 구상은 [`docs/concept.md`](docs/concept.md).
 
-## 지금 되는 것 — 1조각: 세션 브리핑 (3·4·5)
+## 쓰는 법
 
-밀린 Claude Code 세션들을 훑어 **사람이 내려야 할 결정만** 카드로 올리고, 답을 정리해 각 세션에 전달한다.
+폰 Claude 앱 → **Code** 탭 → 새 세션, 이 리포 선택 → 받아쓰기로 말한다.
 
-1. 폰 Claude 앱 → **Code** 탭 → 새 세션, 이 리포 선택
-2. 받아쓰기로 **"브리핑"**
-3. 결론 3줄과 결정 카드를 보고, 칩을 누르거나 말로 답한다
-4. 해석을 한 줄씩 확인하면 각 세션으로 전달된다(권한 승인·병합 같은 건 링크만 준다)
+| 말 | 무엇이 일어나나 | 구상 | 상태 |
+|---|---|---|---|
+| **"…해 줘"** (두서없어도 됨) | 요지 되말하기 → 필요한 것만 짧게 인터뷰 → **의도 계약** 승인 → 최종 지시서로 새 워커 세션 투입 | ①② | v0, 시험 0 |
+| **"브리핑"** | 밀린 세션 중 **사람이 내릴 결정만** 카드로 → 칩이나 말로 답 → 정리해서 각 세션에 전달 | ③④⑤ | 시험 1/3 (판정: 나음) |
 
-필요한 것: Claude Code 클라우드 세션을 쓸 수 있는 플랜, GitHub 연동.
-상태: 구현됨, 실사용 시험 0/3 ([`trials/`](trials/TEMPLATE.md)). 음성 출력(2조각)·정방향(3조각)은 계획 단계.
+- 권한 승인·병합·삭제처럼 되돌리기 어려운 일은 비서가 대신하지 않고 링크만 준다.
+- 언제든 "지금은 넘기기"로 하던 일로 돌아갈 수 있다.
+- 필요한 것: Claude Code 클라우드 세션을 쓸 수 있는 플랜, GitHub 연동.
+- 아직 없는 것: 음성으로 읽어 주기(2조각), 투입한 워커의 이정표 브리핑(4조각). 시험 기록은 [`trials/`](trials/).
 
 ## 지도
 
@@ -33,8 +35,9 @@ AI는 이미 충분히 유능하다. 이제 세션 품질을 깎는 건 사람 �
 | [`docs/concept.md`](docs/concept.md) | 무엇·왜 — 계기, 구상 5요소, 설계 원칙, 위험 |
 | [`docs/architecture.md`](docs/architecture.md) | 어떻게 — 역할·채널·표면 선택·조각 계획·스파이크 |
 | [`docs/decisions.md`](docs/decisions.md) | 결정 기록 |
-| [`.claude/skills/assis-inbox/`](.claude/skills/assis-inbox/SKILL.md) | 1조각 절차와 분류 스크립트 |
-| [`trials/`](trials/TEMPLATE.md) | 실사용 시험 기록(익명) |
+| [`.claude/skills/assis-intake/`](.claude/skills/assis-intake/SKILL.md) | 3조각: 작업 접수 — 계약·지시서 양식과 완성 예시 |
+| [`.claude/skills/assis-inbox/`](.claude/skills/assis-inbox/SKILL.md) | 1조각: 세션 브리핑 — 절차와 분류·추출 스크립트 |
+| [`trials/`](trials/) | 실사용 시험 기록(익명) |
 | [`docs/research/`](docs/research/) | 조사 근거 (날짜별, 갱신하지 않음) |
 | [`docs/dev/handoff.md`](docs/dev/handoff.md) | 개발 인계 — 다음 세션의 출발점 |
 | [`CLAUDE.md`](CLAUDE.md) | 이 리포에서 열린 Claude 세션의 규율 |
