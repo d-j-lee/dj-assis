@@ -14,13 +14,14 @@ import triage  # noqa: E402
 NOW = datetime(2026, 10, 18, 12, 0, tzinfo=timezone.utc)
 
 
-def session(sid, bucket, category=None, days_ago=1.0, unread=False, needs=None):
+def session(sid, bucket, category=None, days_ago=1.0, unread=False, needs=None, connected=False):
     s = {
         "id": sid,
         "title": f"title {sid}",
         "status_bucket": f"SESSION_STATUS_BUCKET_{bucket}",
         "updated_at": (NOW - timedelta(days=days_ago)).isoformat().replace("+00:00", "Z"),
         "unread": unread,
+        "connection_status": "connected" if connected else "disconnected",
         "session_context": {"sources": [{"git_repository": {"url": "https://github.com/o/r"}}]},
         "external_metadata": {"context_usage": {"used_tokens": 500, "max_tokens": 1000}},
     }
@@ -78,6 +79,16 @@ class TriageTest(unittest.TestCase):
         self.assertEqual([i["id"] for i in r["stale"]], ["old"])
         self.assertEqual(r["total"], 1)
         self.assertEqual(r["working"], [])
+
+    def test_recently_active_connected_is_settling_not_fresh(self):
+        # 실측: '검토 대기'인데 연결된 채 몇 분 전에 움직인 세션은 백그라운드 작업이 남아 있었다.
+        r = self.run_triage([
+            session("busy", "REVIEW_READY", "review_ready", days_ago=5 / 1440, connected=True),
+            session("quiet", "REVIEW_READY", "review_ready", days_ago=5 / 1440, connected=False),
+            session("old", "REVIEW_READY", "review_ready", days_ago=2 / 24, connected=True),
+        ])
+        self.assertEqual([i["id"] for i in r["settling"]], ["busy"])
+        self.assertEqual([i["id"] for i in r["fresh"]], ["quiet", "old"])
 
     def test_completed_is_not_waiting(self):
         r = self.run_triage([session("done", "COMPLETED", "completed")])
